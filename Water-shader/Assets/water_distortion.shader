@@ -6,11 +6,20 @@
 
 Shader "FX/Glass/Stained BumpDistort" {
 	Properties{
-		_BumpAmt("Distortion", range(0,128)) = 10
-		_BumpScl("Scale", range(1,2)) = 1
-		_SpeedAmt("Speed", range(0,10)) = 1
-		_MainTex("Tint Color (RGB)", 2D) = "white" {}
+		_Bump1Amt("Distortion1", range(0,128)) = 10
+		_Bump1Scl("Scale1", range(.05,20)) = 1
+		_X1Off("X1", range(.01,1)) = 0
+		_Y1Off("Y1", range(.01,1)) = 0
+		_Speed1Amt("Speed1", range(0,10)) = 1
+
+
+		_Bump1DScl("Scale1D", range(.05,20)) = 1
+		_X1DOff("X1D", range(.01,1)) = 0
+		_Y1DOff("Y1D", range(.01,1)) = 0
+		_Speed1DAmt("Speed1D", range(0,10)) = 1
+
 		_BumpMap("Normalmap", 2D) = "bump" {}
+		_NoiseMap("Texture Noise", 2D) = "noise" {}
 	}
 
 		Category{
@@ -46,17 +55,25 @@ struct appdata_t {
 };
 
 struct v2f {
-	float4 vertex : POSITION;
-	float4 uvgrab : TEXCOORD0;
-	float2 uvbump : TEXCOORD1;
-	float2 uvmain : TEXCOORD2;
+	float4 vertex  : POSITION;
+	float4 uvgrab  : TEXCOORD0;
+	float2 uvbump  : TEXCOORD1;
+	float2 uvmain  : TEXCOORD2;
 };
 
-float _BumpAmt;
-float _BumpScl;
-float _SpeedAmt;
+float _Bump1Amt;
+float _Bump1Scl;
+float _X1Off;
+float _Y1Off;
+float _Speed1Amt;
+
+float _Bump1DScl;
+float _X1DOff;
+float _Y1DOff;
+float _Speed1DAmt;
+
 float4 _BumpMap_ST;
-float4 _MainTex_ST;
+float4 _NoiseMap_ST;
 
 v2f vert(appdata_t v)
 {
@@ -70,7 +87,6 @@ v2f vert(appdata_t v)
 	o.uvgrab.xy = (float2(o.vertex.x, o.vertex.y*scale) + o.vertex.w) * 0.5;
 	o.uvgrab.zw = o.vertex.zw;
 	o.uvbump = TRANSFORM_TEX(v.texcoord, _BumpMap);
-	o.uvmain = TRANSFORM_TEX(v.texcoord, _MainTex);
 	return o;
 }
 
@@ -78,17 +94,19 @@ sampler2D _GrabTexture;
 float4 _GrabTexture_TexelSize;
 sampler2D _BumpMap;
 sampler2D _MainTex;
+sampler2D _NoiseMap;
 
 half4 frag(v2f i) : COLOR
 {
 	// calculate perturbed coordinates
-	half2 bump = UnpackNormal(tex2D(_BumpMap, float2(0, 0) + i.uvbump / _BumpScl)).rg; // we could optimize this by just reading the x & y without reconstructing the Z
-	float2 offset = bump * _BumpAmt * _GrabTexture_TexelSize.xy;
-	i.uvgrab.xy = offset * i.uvgrab.z + i.uvgrab.xy;
+	float magnitude = sqrt(pow( _X1Off, 2) + pow(_Y1Off, 2));
+	half2 bump1 = UnpackNormal(tex2D(_BumpMap, float2(-_X1Off, -_Y1Off) / magnitude * _Time * _Speed1Amt + i.uvbump / _Bump1Scl)).rg; // we could optimize this by just reading the x & y without reconstructing the Z
+	float2 offset1 = bump1 * _Bump1Amt * _GrabTexture_TexelSize.xy;
+	i.uvgrab.xy = offset1 * i.uvgrab.z + i.uvgrab.xy;
 
 	half4 col = tex2Dproj(_GrabTexture, UNITY_PROJ_COORD(i.uvgrab));
-	half4 tint = tex2D(_MainTex, i.uvmain);
-	return col * tint; 
+	half4 noise = tex2D(_NoiseMap, UNITY_PROJ_COORD(i.uvgrab) / _Bump1DScl);
+	return col * noise;
 }
 ENDCG
 		}
