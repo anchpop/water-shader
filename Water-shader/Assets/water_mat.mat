@@ -47,6 +47,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Noise1Map:
+        m_Texture: {fileID: 2800000, guid: 75914e594facb5e43a9945c777108ef3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Noise2Map:
+        m_Texture: {fileID: 2800000, guid: 877f2cb167fb2214eb1a4ad40af1990a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _NoiseMap:
         m_Texture: {fileID: 2800000, guid: 75914e594facb5e43a9945c777108ef3, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -60,9 +68,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Bump1Amt: 10.9
+    - _Bump1Amt: 16.9
     - _Bump1DScl: 0.96
-    - _Bump1Scl: 1
+    - _Bump1Scl: 3.4
+    - _Bump2DScl: 1
     - _BumpAmt: 12.3
     - _BumpScale: 1
     - _BumpScl: 1
@@ -80,14 +89,19 @@ Material:
     - _SpecularHighlights: 1
     - _Speed1Amt: 0.09
     - _Speed1DAmt: 1
+    - _Speed2DAmt: 0.51
     - _SpeedAmt: 0.06
     - _SrcBlend: 1
+    - _ThresholdAmt: 0.271
+    - _ThresholdBrightening: 1
     - _UVSec: 0
-    - _X1DOff: 0
+    - _X1DOff: 0.099
     - _X1Off: 0.607
+    - _X2DOff: -1
     - _XOff: 0.644
-    - _Y1DOff: 0
-    - _Y1Off: 0.601
+    - _Y1DOff: 0.057
+    - _Y1Off: 0.46
+    - _Y2DOff: 0.5
     - _YOff: 0.308
     - _ZWrite: 1
     m_Colors:

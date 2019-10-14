@@ -8,8 +8,8 @@ Shader "FX/Glass/Stained BumpDistort" {
 	Properties{
 		_Bump1Amt("Distortion1", range(0,128)) = 10
 		_Bump1Scl("Scale1", range(.05,20)) = 1
-		_X1Off("X1", range(.01,1)) = 0
-		_Y1Off("Y1", range(.01,1)) = 0
+		_X1Off("X1", range(-1,1)) = 0
+		_Y1Off("Y1", range(-1,1)) = 0
 		_Speed1Amt("Speed1", range(0,10)) = 1
 
 
@@ -18,14 +18,14 @@ Shader "FX/Glass/Stained BumpDistort" {
 
 
 		_Bump1DScl("Scale1D", range(.05,20)) = 1
-		_X1DOff("X1D", range(.01,1)) = 0
-		_Y1DOff("Y1D", range(.01,1)) = 0
+		_X1DOff("X1D", range(-1,1)) = 0
+		_Y1DOff("Y1D", range(-11,1)) = 0
 		_Speed1DAmt("Speed1D", range(0,10)) = 1
 
 
 		_Bump2DScl("Scale2D", range(.05,20)) = 1
-		_X2DOff("X2D", range(.01,1)) = 0.01
-		_Y2DOff("Y2D", range(.01,1)) = 0.01
+		_X2DOff("X2D", range(-1,1)) = 0.01
+		_Y2DOff("Y2D", range(-1,1)) = 0.01
 		_Speed2DAmt("Speed2D", range(0,10)) = 1
 
 		_BumpMap("Normalmap", 2D) = "bump" {}
@@ -133,10 +133,11 @@ half4 frag(v2f i) : COLOR
 	half4 noise1 = tex2D(_Noise1Map, float2(-_X1DOff, -_Y1DOff) / magnitude1D * _Time.y * (_Speed1DAmt / 8) + UNITY_PROJ_COORD(i.uvgrab) / _Bump1DScl);
 	half4 noise2 = tex2D(_Noise2Map, float2(-_X2DOff, -_Y2DOff) / magnitude2D * _Time.y * (_Speed2DAmt / 8) + UNITY_PROJ_COORD(i.uvgrab) / _Bump2DScl);
 
-	bool noise = step(_ThresholdAmt, noise1.x * noise2.x);
+	float noiseCombined = noise1.x * noise2.x;
+	bool noiseStepped = step(_ThresholdAmt, noise1.x * noise2.x);
 
 	half4 col = tex2Dproj(_GrabTexture, UNITY_PROJ_COORD(i.uvgrab));
-	return lerp(col, lerp(col, float4(1, 1, 1, 1), _ThresholdBrightening), noise);
+	return lerp(col, lerp(col, float4(1, 1, 1, 1), _ThresholdBrightening * noiseCombined), noiseStepped);
 }
 ENDCG
 		}
