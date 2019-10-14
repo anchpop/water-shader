@@ -69,9 +69,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Bump1Amt: 16.9
-    - _Bump1DScl: 0.96
+    - _Bump1DScl: 0.6
     - _Bump1Scl: 3.4
-    - _Bump2DScl: 1
+    - _Bump2DScl: 0.3
     - _BumpAmt: 12.3
     - _BumpScale: 1
     - _BumpScl: 1
