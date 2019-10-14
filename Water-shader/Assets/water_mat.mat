@@ -70,7 +70,7 @@ Material:
     m_Floats:
     - _Bump1Amt: 16.9
     - _Bump1DScl: 0.6
-    - _Bump1Scl: 3.4
+    - _Bump1Scl: 1.5
     - _Bump2DScl: 0.3
     - _BumpAmt: 12.3
     - _BumpScale: 1
@@ -93,7 +93,7 @@ Material:
     - _SpeedAmt: 0.06
     - _SrcBlend: 1
     - _ThresholdAmt: 0.271
-    - _ThresholdBrightening: 1
+    - _ThresholdBrightening: 0.909
     - _UVSec: 0
     - _X1DOff: 0.099
     - _X1Off: 0.607
